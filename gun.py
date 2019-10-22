@@ -29,28 +29,29 @@ class Ball():
         self.vy = 0
         self.color = choice(['blue', 'green', 'red', 'brown'])
         self.id = canvas.create_oval(
-                self.x - self.r,
-                self.y - self.r,
-                self.x + self.r,
-                self.y + self.r,
-                fill=self.color
+            self.x - self.r,
+            self.y - self.r,
+            self.x + self.r,
+            self.y + self.r,
+            fill=self.color
         )
         self.live = 120
 
     def set_coords(self):
         canvas.coords(
-                self.id,
-                self.x - self.r,
-                self.y - self.r,
-                self.x + self.r,
-                self.y + self.r
+            self.id,
+            self.x - self.r,
+            self.y - self.r,
+            self.x + self.r,
+            self.y + self.r
         )
 
     def move(self):
         """Переместить мяч по прошествии единицы времени.
 
-        Метод описывает перемещение мяча за один кадр перерисовки. То есть, обновляет значения
-        self.x и self.y с учетом скоростей self.vx и self.vy, силы гравитации, действующей на мяч,
+        Метод описывает перемещение мяча за один кадр перерисовки.
+        То есть, обновляет значения self.x и self.y с учетом скоростей
+        self.vx и self.vy, силы гравитации, действующей на мяч,
         и стен по краям окна (размер окна 800х600).
         """
         self.live -= 1
@@ -76,18 +77,20 @@ class Ball():
             return False
 
     def hittest(self, obj):
-        """Функция проверяет сталкивалкивается ли данный обьект с целью, описываемой в обьекте obj.
+        """Функция проверяет сталкивалкивается ли данный обьект с целью,
+        описываемой в обьекте obj.
 
         Args:
             obj: Обьект, с которым проверяется столкновение.
         Returns:
-            Возвращает True в случае столкновения мяча и цели. В противном случае возвращает False.
+            Возвращает True в случае столкновения мяча и цели. В противном
+            случае возвращает False.
         """
         if isinstance(obj, Targets):
             points = 0
             for target in obj.targets:
-                if ((self.x - target.x)**2 + (self.y - target.y)**2 <=
-                            (self.r + target.r)**2) and target.live:
+                if ((self.x - target.x) ** 2 + (self.y - target.y) ** 2 <=
+                            (self.r + target.r) ** 2) and target.live:
                     target.hit()
                     points += 1
             obj.hit(points)
@@ -114,13 +117,14 @@ class Gun():
         """Выстрел мячом.
 
         Происходит при отпускании кнопки мыши.
-        Начальные значения компонент скорости мяча vx и vy зависят от положения мыши.
+        Начальные значения компонент скорости мяча vx и vy зависят от
+        положения мыши.
         """
         global balls, bullet
         bullet += 1
         new_ball = Ball()
         new_ball.r += 5
-        self.an = math.atan((event.y-new_ball.y) / (event.x-new_ball.x))
+        self.an = math.atan((event.y - new_ball.y) / (event.x - new_ball.x))
         new_ball.vx = self.f2_power * math.cos(self.an)
         new_ball.vy = - self.f2_power * math.sin(self.an)
         balls += [new_ball]
@@ -130,7 +134,7 @@ class Gun():
     def targetting(self, event=0):
         """Прицеливание. Зависит от положения мыши."""
         if event:
-            self.an = math.atan((event.y-450) / (event.x-20))
+            self.an = math.atan((event.y - 450) / (event.x - 20))
         if self.f2_on:
             canvas.itemconfig(self.id, fill='orange')
         else:
@@ -153,7 +157,8 @@ class Targets():
     def __init__(self, *args):
         self.targets = list(args)
         self.points = 0
-        self.id_points = canvas.create_text(30, 30, text=self.points, font='28')
+        self.id_points = canvas.create_text(30, 30, text=self.points,
+                                            font='28')
 
     def add(self, *args):
         self.targets.append(*args)
@@ -222,7 +227,9 @@ def new_game(event=''):
             if not targets.alive():
                 canvas.bind('<Button-1>', '')
                 canvas.bind('<ButtonRelease-1>', '')
-                canvas.itemconfig(screen_1, text='Вы уничтожили цель за ' + str(bullet) + ' выстрелов')
+                canvas.itemconfig(screen_1,
+                                  text='Вы уничтожили цель за ' + str(
+                                      bullet) + ' выстрелов')
         canvas.update()
         time.sleep(delay)
         gun_1.targetting()
